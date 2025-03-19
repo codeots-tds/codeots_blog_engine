@@ -1,0 +1,8 @@
+.python-version
+25.0.1
+.env
+blog_endpoints.md
+creds.md
+service-account.json
+df.csv
+__pycache__
