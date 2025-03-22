@@ -7,6 +7,8 @@ from urllib.parse import unquote
 
 import pandas as pd
 
+from .g_sheets_db import GS_Client
+
 project_root = Path(__file__).resolve().parents[1]
 env_path = project_root / '.env'
 
@@ -17,13 +19,6 @@ auth_code = os.getenv('WP_AUTH_CODE')
 # auth_code = unquote(os.getenv("WP_AUTH_CODE"))
 blog_id = os.getenv('WP_BLOG_ID')
 access_token = os.getenv('WP_ACCESS_TOKEN')
-
-# print(client_id)
-# print(client_secret)
-# print(redirect_url)
-# print(auth_code)
-# print(blog_id)
-# print(access_token_read_auth_stats)
 
 def get_access_token():
     url = "https://public-api.wordpress.com/oauth2/token"
@@ -49,12 +44,12 @@ def get_access_token():
             print("🔎 Scope:", response.get("scope"))
 
         else:
-            print("❌ Error:", response.get("error_description"))
+            print("Error:", response.get("error_description"))
 
     except Exception as e:
         # If JSON parsing fails, output raw response text
-        print(f"❌ Raw Response: {res.content.decode('utf-8')}")
-        print(f"❌ Error: {e}")
+        print(f"Raw Response: {res.content.decode('utf-8')}")
+        print(f"Error: {e}")
 
 def fetch_posts():
     url = f"https://public-api.wordpress.com/rest/v1.1/sites/{blog_id}/posts/"
@@ -67,9 +62,9 @@ def fetch_posts():
         for post in posts[:5]:
             print(f"Title {post.get('title')}: URL {post.get('URL')}")
     else:
-        print("❌ Error fetching posts:", res.json())
+        print("Error fetching posts:", res.json())
 
-def fetch_all_post_data():
+def backlog_post_data():
     url = f"https://public-api.wordpress.com/rest/v1.1/sites/{blog_id}/posts/"
     headers = {"Authorization": f"Bearer {access_token}"}
     res = requests.get(url, headers=headers)
@@ -88,14 +83,15 @@ def fetch_all_post_data():
         }
         for idx, post in enumerate(posts['posts']):
                 # print(post.keys())
+                post = {k.lower(): v for k, v in post.items()}
                 tracking_list.append([
-                    post['ID'],
-                    post['site_ID'],
+                    post['id'],
+                    post['site_id'],
                     post['date'],
                     # post['timestamp'],
                     post['title'],
-                    post['URL'],
-                    post['global_ID']
+                    post['url'],
+                    post['global_id']
                     ])
                 # analytics_list.append([
                 #     post['ID'],
@@ -129,7 +125,7 @@ def fetch_all_post_data():
                 #     # post['meta']
                 # ])
                 content_list.append([
-                    post['ID'],
+                    post['id'],
                     post['content'],
                     post['excerpt']
                 ])
@@ -140,15 +136,15 @@ def fetch_all_post_data():
     return data_dict
 
 
-
-
 if __name__ == '__main__':
     # get_access_token()
     # fetch_posts()
-    df = fetch_all_post_data()
-    print(df)
+    # data_dict = fetch_all_post_data()
+    # print(data_dict.keys())
+    # data_dict = backlog_post_data()
+    # gs_obj_tracking_data = GS_Client()
+    # gs_obj_tracking_data.insert_data(spreadsheet_id=gs_obj_tracking_data.codeots_gdrive_dict['codeots_tracking_sheet_id'], 
+    #                                 values=data_dict['tracking'].values.tolist(),
+    #                                 start_range='A', end_range='F', 
+    #                                 sheet_name='blog_tracking')
     v=5
-
-
-
-
