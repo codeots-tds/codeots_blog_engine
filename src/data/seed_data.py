@@ -139,12 +139,12 @@ def backlog_post_data():
 if __name__ == '__main__':
     # get_access_token()
     # fetch_posts()
-    # data_dict = fetch_all_post_data()
     # print(data_dict.keys())
-    # data_dict = backlog_post_data()
-    # gs_obj_tracking_data = GS_Client()
-    # gs_obj_tracking_data.insert_data(spreadsheet_id=gs_obj_tracking_data.codeots_gdrive_dict['codeots_tracking_sheet_id'], 
-    #                                 values=data_dict['tracking'].values.tolist(),
-    #                                 start_range='A', end_range='F', 
-    #                                 sheet_name='blog_tracking')
-    v=5
+    data_dict = backlog_post_data()
+    gs_obj_tracking_data = GS_Client()
+    gs_obj_tracking_data.insert_data(
+                        spreadsheet_id=gs_obj_tracking_data.codeots_gdrive_dict['codeots_tracking_sheet_id'], 
+                        values=data_dict['tracking'].values.tolist(),
+                        start_range='A', end_range='F', 
+                        sheet_name='blog_tracking')
+    

@@ -6,3 +6,4 @@ creds.md
 service-account.json
 df.csv
 __pycache__
+wallet/
